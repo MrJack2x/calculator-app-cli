@@ -34,7 +34,6 @@ function isValidNumber(numStr: string) {
   if (isNaN(parseFloat(numStr))) {
     console.log("Error: The number provided is not a valid number.");
     startCalculator();
-    return;
   }
 }
 
@@ -42,7 +41,6 @@ function isValidOperation(operation: string) {
   if (!["+", "-", "*", "/"].includes(operation.trim())) {
     console.log("Error: Invalid operation provided.");
     startCalculator();
-    return;
   }
 }
 
