@@ -30,32 +30,48 @@ function calculate({
   }
 }
 
+function isValidNumber(numStr: string) {
+  if (isNaN(parseFloat(numStr))) {
+    console.log("Error: The number provided is not a valid number.");
+    startCalculator();
+    return;
+  }
+}
+
+function isValidOperation(operation: string) {
+  if (!["+", "-", "*", "/"].includes(operation.trim())) {
+    console.log("Error: Invalid operation provided.");
+    startCalculator();
+    return;
+  }
+}
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
+function redoCalculation() {
+  rl.question(
+    "Would you like to perform another calculation? (y/n): ",
+    (ans) => {
+      if (ans === "y" || ans === "Y") {
+        startCalculator();
+      } else {
+        console.log("Goodbye!");
+        rl.close();
+      }
+    },
+  );
+}
+
 function startCalculator() {
   rl.question("Please enter an operation (+, -, *, /): ", (operation) => {
-    if (!["+", "-", "*", "/"].includes(operation.trim())) {
-      console.log("Error: Invalid operation provided.");
-      startCalculator();
-      return;
-    }
+    isValidOperation(operation);
     rl.question("Please enter the first number: ", (num1Str) => {
-      if (isNaN(parseFloat(num1Str))) {
-        console.log("Error: The first number provided is not a valid number.");
-        rl.close();
-        return;
-      }
+      isValidNumber(num1Str);
       rl.question("Please enter the second number: ", (num2Str) => {
-        if (isNaN(parseFloat(num2Str))) {
-          console.log(
-            "Error: The second number provided is not a valid number."
-          );
-          rl.close();
-          return;
-        }
+        isValidNumber(num2Str);
 
         const num1: number = parseFloat(num1Str);
         const num2: number = parseFloat(num2Str);
@@ -63,17 +79,7 @@ function startCalculator() {
         const result = calculate({ operation, num1, num2 });
         console.log(`The result is: ${result}`);
 
-        rl.question(
-          "Would you like to perform another calculation? (y/n): ",
-          (ans) => {
-            if (ans === "y" || ans === "Y") {
-              startCalculator();
-            } else {
-              console.log("Goodbye!");
-              rl.close();
-            }
-          }
-        );
+        redoCalculation();
       });
     });
   });
